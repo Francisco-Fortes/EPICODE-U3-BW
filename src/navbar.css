@@ -8,6 +8,7 @@ body {
 
 .me-2 {
     background-color: #eef3f8;
+    margin-top: 0.7em;
 }
 
 .navbar-light .navbar-nav .nav-link {
@@ -81,3 +82,4 @@ body {
     width: 25px;
     border-radius: 50%;
 }
+
