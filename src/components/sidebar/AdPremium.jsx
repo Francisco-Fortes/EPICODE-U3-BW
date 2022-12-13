@@ -25,7 +25,7 @@ const AdPremium = () => {
           <Card.Text className="mt-2">
             See who's view your profile in the last 90 days
           </Card.Text>
-          <Button id="ad-button" variant="outline-info">
+          <Button className="rd" variant="outline-info">
             <h5 className="m-0 py-1 px-2">Try for Free</h5>
           </Button>
         </Card.Body>
