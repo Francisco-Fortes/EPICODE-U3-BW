@@ -17,7 +17,7 @@ const PeopleViewed = () => {
               />
             </Col>
             <Col md={9} lg={9} className="pl-3">
-              <Card.Text className="mb-2 text-muted f-14 d-flex row align-items-start">
+              <Card.Text className="mb-2 text-muted f-14 row align-items-start">
                 <p className="m-0" style={{ color: "red" }}>
                   <span className="f-14b">Name LastName</span> · 1st
                 </p>
@@ -58,7 +58,7 @@ const PeopleViewed = () => {
               />
             </Col>
             <Col md={9} lg={9} className="pl-3">
-              <Card.Text className="mb-2 text-muted f-14 d-flex row align-items-start">
+              <Card.Text className="mb-2 text-muted f-14 row align-items-start">
                 <p className="m-0" style={{ color: "red" }}>
                   <span className="f-14b">Name LastName</span> · 2nd
                 </p>
