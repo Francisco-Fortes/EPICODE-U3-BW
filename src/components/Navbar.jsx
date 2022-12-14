@@ -4,8 +4,12 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function MyNavbar() {
+  let navigate = useNavigate();
+  const [search, setSearch] = useState("")
   return (
     <Navbar className='navflex' bg="light" expand="lg">
       
@@ -20,8 +24,15 @@ function MyNavbar() {
             navbarScroll
           >
            
-          <Form className="d-flex">
+          <Form onSubmit={(e) => {e.preventDefault()}} className="d-flex">
             <Form.Control
+              onKeyUp={(i) => {
+                if (i.key==="Enter") {
+                  i.preventDefault()
+                  navigate(`/search/${encodeURIComponent(search)}`);
+                }
+              }}
+              onChange={(e) => {setSearch(e.target.value)}}
               type="search"
               placeholder="Search"
               className="me-2"
