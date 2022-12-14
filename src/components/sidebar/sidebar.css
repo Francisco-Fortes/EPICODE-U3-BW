@@ -21,3 +21,16 @@
 .rd {
   border-radius: 50px;
 }
+
+.border-bot {
+  border-bottom: 1px #aaafb3 solid;
+}
+
+.border-top {
+  border-top: 1px #aaafb3 solid;
+}
+
+.show-btn {
+  text-decoration: none;
+  border-radius: 0;
+}

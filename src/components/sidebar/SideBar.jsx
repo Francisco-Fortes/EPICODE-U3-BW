@@ -1,5 +1,6 @@
 import AdPremium from "./AdPremium";
 import Edit from "./Edit";
+import PeopleKnow from "./PeopleKnow";
 import PeopleViewed from "./PeopleViewed";
 import "./sidebar.css";
 
@@ -18,6 +19,7 @@ const SideBar = () => {
           <Edit text="Add profile in another language" />
           <AdPremium />
           <PeopleViewed />
+          <PeopleKnow />
         </Col>
       </Row>
     </Container>
