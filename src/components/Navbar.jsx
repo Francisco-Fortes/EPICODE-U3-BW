@@ -57,7 +57,13 @@ function MyNavbar() {
                             />
                         </Form>
 
-                        <Nav.Link className="naviconflex" href="#action2">
+                        <Nav.Link
+                            className="naviconflex"
+                            href="#action2"
+                            onClick={(e) => {
+                                navigate("/");
+                            }}
+                        >
                             <img
                                 className="navicon"
                                 src="/icons8-home.svg"
@@ -65,7 +71,13 @@ function MyNavbar() {
                             />
                             Home
                         </Nav.Link>
-                        <Nav.Link className="naviconflex" href="#action2">
+                        <Nav.Link
+                            className="naviconflex"
+                            href="#action2"
+                            onClick={(e) => {
+                                navigate("/");
+                            }}
+                        >
                             <img
                                 className="navicon"
                                 src="/group-svgrepo-com.svg"
@@ -73,7 +85,13 @@ function MyNavbar() {
                             />
                             My Network
                         </Nav.Link>
-                        <Nav.Link className="naviconflex" href="#action2">
+                        <Nav.Link
+                            className="naviconflex"
+                            href="#action2"
+                            onClick={(e) => {
+                                navigate("/");
+                            }}
+                        >
                             <img
                                 className="navicon"
                                 src="/briefcase-svgrepo-com.svg"
@@ -81,7 +99,13 @@ function MyNavbar() {
                             />
                             Jobs
                         </Nav.Link>
-                        <Nav.Link className="naviconflex" href="#action2">
+                        <Nav.Link
+                            className="naviconflex"
+                            href="#action2"
+                            onClick={(e) => {
+                                navigate("/");
+                            }}
+                        >
                             <img
                                 className="navicon"
                                 src="/bell-svgrepo-com.svg"
@@ -154,7 +178,13 @@ function MyNavbar() {
                                 </NavDropdown.Item>
                             </NavDropdown>
                         </div>
-                        <Nav.Link className="naviconflex" href="#action2">
+                        <Nav.Link
+                            className="naviconflex"
+                            href="#action2"
+                            onClick={(e) => {
+                                navigate("/");
+                            }}
+                        >
                             <img
                                 className="navicon"
                                 src="/dots-menu-svgrepo-com.svg"
@@ -162,7 +192,13 @@ function MyNavbar() {
                             />
                             Work
                         </Nav.Link>
-                        <Nav.Link className="naviconflex" href="#action2">
+                        <Nav.Link
+                            className="naviconflex"
+                            href="#action2"
+                            onClick={(e) => {
+                                navigate("/");
+                            }}
+                        >
                             <img
                                 className="navicon"
                                 src="/open-book-svgrepo-com.svg"
