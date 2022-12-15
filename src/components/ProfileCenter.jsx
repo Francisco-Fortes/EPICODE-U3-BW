@@ -10,6 +10,7 @@ import {
     BsX,
 } from "react-icons/bs";
 import { Row, Col, Modal, Button, Form } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const ProfileCenter = (props) => {
     const [isLoading, setIsLoading] = useState(true);
