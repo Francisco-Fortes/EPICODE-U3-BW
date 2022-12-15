@@ -1,5 +1,6 @@
 import AdPremium from "./AdPremium";
 import Edit from "./Edit";
+import Experiences from "./Experiences";
 import PeopleKnow from "./PeopleKnow";
 import PeopleViewed from "./PeopleViewed";
 import "./sidebar.css";
@@ -11,7 +12,7 @@ const SideBar = () => {
     <Container>
       <Row className="justify-content-center">
         <Col md={8} lg={8}>
-          Main card
+          <Experiences />
         </Col>
         {/* SIDEBAR STARTS HERE */}
         <Col md={4} lg={4}>
