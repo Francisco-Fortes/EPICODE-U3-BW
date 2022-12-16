@@ -16,6 +16,7 @@ function MyNavbar() {
     return (
         <Navbar className="navflex" bg="light" expand="lg">
             <Container fluid>
+                
                 <Navbar.Brand href="#">
                     <img
                         className="logo"
@@ -56,9 +57,9 @@ function MyNavbar() {
                                 aria-label="Search"
                             />
                         </Form>
-
+                        
                         <Nav.Link
-                            className="naviconflex"
+                            className="naviconflex first__navicon"
                             href="#action2"
                             onClick={(e) => {
                                 navigate("/");
