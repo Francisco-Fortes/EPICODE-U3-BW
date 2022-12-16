@@ -27,3 +27,7 @@
     flex-direction: column;
     margin-left: 0.5rem;
 }
+
+.searchcontainer h4 {
+    padding: 10px;
+}
