@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import SearchPage from "./components/SearchPage";
 import FeedPage from "./components/FeedPage";
 import './feedsidebar.css'
+import './leftsidebar.css'
 
 function App() {
     const users = useSelector((state) => state.users);
