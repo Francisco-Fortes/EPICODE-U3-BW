@@ -21,6 +21,7 @@ import {
     BiTrash,
 } from "react-icons/bi";
 import { useSelector } from "react-redux";
+import FeedSidebar from "./FeedSidebar";
 
 function timeSince(date) {
     var seconds = Math.floor((new Date() - date) / 1000);
@@ -192,7 +193,7 @@ export default function FeedPage() {
                         ))}
                 </Col>
                 <Col md={3}>
-                    <h4>Right sidebar</h4>
+                    <FeedSidebar/>
                 </Col>
             </Row>
         </Container>

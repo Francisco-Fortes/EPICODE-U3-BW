@@ -1,0 +1,25 @@
+.addfeedlex {
+    display: flex;
+    flex-direction: column;
+}
+
+.companylogo {
+    width: 50px;
+    border-radius: 50%;
+}
+
+.feedsidebar {
+    background-color: #fff;
+    border-radius: 20px;
+    border: 1px solid #bfbfbf;
+}
+
+.feedsidebar p {
+    margin-bottom: 0;
+}
+
+.follow {
+    background-color: transparent;
+    margin: 1px solid #bfbfbf;
+    border-radius: 20px;
+}
