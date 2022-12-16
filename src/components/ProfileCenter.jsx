@@ -105,7 +105,7 @@ const ProfileCenter = (props) => {
         handleClose2();
 
         const formData = new FormData();
-        formData.append("post", image);
+        formData.append("profile", image);
 
         await doFetch(
             `https://striveschool-api.herokuapp.com/api/profile/${localUser._id}/picture`,
