@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import banner from "../banner.png";
 
 export default function LeftSidebar() {
     const localUser = useSelector((state) => state.activeUser);
@@ -8,7 +9,7 @@ export default function LeftSidebar() {
         <Container className="leftsidebar">
             <div className="leftsidetop">
             <div>
-                <img src="" alt="" />
+                <img className="leftbanner" src={banner} alt="" />
             </div>
             <div>
                 <img className="leftpfp" src={localUser?.image} alt="" />

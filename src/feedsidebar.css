@@ -45,3 +45,13 @@
     padding: 5px;
     text-align: center;
 }
+
+
+.leftbanner {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin: 0;
+    display: none;
+    
+}
