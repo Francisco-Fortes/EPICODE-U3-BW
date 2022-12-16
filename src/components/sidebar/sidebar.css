@@ -1,0 +1,36 @@
+.frame {
+  border-radius: 10px;
+  background-color: white;
+}
+
+.f-14b {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.f-14 {
+  font-size: 14px;
+}
+
+.circle {
+  border-radius: 50%;
+}
+
+/* ADV PREMIUM */
+
+.rd {
+  border-radius: 50px;
+}
+
+.border-bot {
+  border-bottom: 1px #aaafb3 solid;
+}
+
+.border-top {
+  border-top: 1px #aaafb3 solid;
+}
+
+.show-btn {
+  text-decoration: none;
+  border-radius: 0;
+}
