@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import SearchPage from "./components/SearchPage";
 import FeedPage from "./components/FeedPage";
 import "./search.css"
+import "./feedsidebar.css";
+import "./leftsidebar.css";
 
 function App() {
     const users = useSelector((state) => state.users);
@@ -18,7 +20,7 @@ function App() {
             "https://striveschool-api.herokuapp.com/api/profile/",
             {
                 headers: {
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mzk5YmUwZDU0ZjRhYTAwMTUxOTMwMzkiLCJpYXQiOjE2NzEwMjAwNDUsImV4cCI6MTY3MjIyOTY0NX0.3XuEFOEGaNXNTq32t5nPT9qEUWuQJirhYW-2WA-luyQ`,
+                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mzk5OGQ4MTU0ZjRhYTAwMTUxOTMwMjgiLCJpYXQiOjE2NzEwMDc2MTcsImV4cCI6MTY3MjIxNzIxN30.cSe4CwoajKqBlSxhZ9jxQtYaay9FYkPy74H9lnKOxXI`,
                 },
             }
         );
@@ -34,7 +36,7 @@ function App() {
             "https://striveschool-api.herokuapp.com/api/profile/me",
             {
                 headers: {
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mzk5YmUwZDU0ZjRhYTAwMTUxOTMwMzkiLCJpYXQiOjE2NzEwMjAwNDUsImV4cCI6MTY3MjIyOTY0NX0.3XuEFOEGaNXNTq32t5nPT9qEUWuQJirhYW-2WA-luyQ`,
+                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mzk5OGQ4MTU0ZjRhYTAwMTUxOTMwMjgiLCJpYXQiOjE2NzEwMDc2MTcsImV4cCI6MTY3MjIxNzIxN30.cSe4CwoajKqBlSxhZ9jxQtYaay9FYkPy74H9lnKOxXI`,
                 },
             }
         );

@@ -7,10 +7,14 @@ import {
     BsFillPeopleFill,
     BsFillEyeFill,
     BsArrowRight,
+    BsImage,
     BsX,
 } from "react-icons/bs";
-import { Row, Col, Modal, Button, Form } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { Row, Col, Modal, Button, Form, Container } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
+import { doFetch } from "../util";
 
 const ProfileCenter = (props) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -19,10 +23,21 @@ const ProfileCenter = (props) => {
     const [isMyProfile, setIsMyProfile] = useState(false);
     const [updateProfile, setUpdateProfile] = useState({});
 
+    const [image, setImage] = useState(null);
+    const [imageUrl, setImageUrl] = useState("");
+
     const [show, setShow] = useState(false);
+    const [show2, setShow2] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const handleShow2 = () => setShow2(true);
+    const handleClose2 = () => setShow2(false);
+
+    const dispatch = useDispatch();
+
+    const localUser = useSelector((state) => state.activeUser);
 
     const fetchProfile = async (id, me = false) => {
         if (id === "me") {
@@ -84,13 +99,48 @@ const ProfileCenter = (props) => {
                 body: JSON.stringify(updateProfile),
             });
             if (response.ok) {
+                const data = await response.json();
+
+                dispatch({
+                    type: "SET_USER",
+                    payload: data,
+                });
             }
         } catch (e) {}
+    };
+
+    const handleSave2 = async () => {
+        handleClose2();
+
+        const formData = new FormData();
+        formData.append("profile", image);
+
+        const { data, status } = await doFetch(
+            `https://striveschool-api.herokuapp.com/api/profile/${localUser._id}/picture`,
+            {
+                ...opts,
+                method: "POST",
+                body: formData,
+            },
+            true
+        );
+
+        fetchProfile(localUser._id);
+        dispatch({
+            type: "SET_USER",
+            payload: data,
+        });
     };
 
     useEffect(() => {
         fetchProfile(props.id);
     }, []);
+
+    useEffect(() => {
+        if (!image) return;
+
+        setImageUrl(URL.createObjectURL(image));
+    }, [image]);
 
     return (
         <>
@@ -107,11 +157,30 @@ const ProfileCenter = (props) => {
                         </div>
                         <div className="profile-bottom">
                             {isMyProfile && (
-                                <BiPencil
-                                    className="edit"
-                                    size={25}
-                                    onClick={handleShow}
-                                />
+                                <OverlayTrigger
+                                    placement="right"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={<Tooltip>Edit profile</Tooltip>}
+                                >
+                                    <BiPencil
+                                        className="edit"
+                                        size={25}
+                                        onClick={handleShow}
+                                    />
+                                </OverlayTrigger>
+                            )}
+                            {isMyProfile && (
+                                <OverlayTrigger
+                                    placement="right"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={<Tooltip>Edit Image</Tooltip>}
+                                >
+                                    <BsImage
+                                        className="editImage"
+                                        size={25}
+                                        onClick={handleShow2}
+                                    />
+                                </OverlayTrigger>
                             )}
 
                             <h3>
@@ -292,6 +361,60 @@ const ProfileCenter = (props) => {
                                         Save
                                     </Button>
                                 </Form>
+                            </Modal.Body>
+                        </Modal>
+                    )}
+
+                    {isMyProfile && (
+                        <Modal show={show2} onHide={handleClose2} size="lg">
+                            <Modal.Header>
+                                Edit Profile Image
+                                <BsX
+                                    onClick={handleClose2}
+                                    className="modal-close"
+                                    size={30}
+                                />
+                            </Modal.Header>
+                            <Modal.Body>
+                                <Container>
+                                    <input
+                                        type="file"
+                                        onChange={(e) => {
+                                            setImage(e.target.files[0]);
+                                        }}
+                                    />
+                                    <br />
+                                    <br />
+                                    <div className="btn-group">
+                                        <Button
+                                            variant="secondary"
+                                            onClick={(e) => {
+                                                handleClose2();
+                                                setImage(null);
+                                                setImageUrl("");
+                                            }}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            variant="success"
+                                            className="float-right pilled"
+                                            onClick={handleSave2}
+                                            disabled={image ? null : true}
+                                        >
+                                            Update
+                                        </Button>
+                                    </div>
+
+                                    <hr />
+
+                                    {image && (
+                                        <img
+                                            src={imageUrl}
+                                            className="image-preview"
+                                        />
+                                    )}
+                                </Container>
                             </Modal.Body>
                         </Modal>
                     )}
