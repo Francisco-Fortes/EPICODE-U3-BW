@@ -1,6 +1,7 @@
 .addfeedflex {
     display: flex;
     flex-direction: column;
+    
 }
 
 .companylogo {
@@ -12,8 +13,9 @@
 
 .feedsidebar {
     background-color: #fff;
-    border-radius: 20px;
+    border-radius: 15px;
     border: 1px solid #d2d2d2;
+    width: 20vw;
 }
 
 .feedsidebar p {
@@ -28,12 +30,14 @@
     width: 7rem;
     height: 2rem;
     color: #8e8e8e;
+    padding: 3px;
 }
 
 .follow:hover {
     background-color: #dadada;
     border: 2px solid #8e8e8e;
     color: #8e8e8e;
+    padding: 3px;
 }
 
 .feedsidebar h4 {
