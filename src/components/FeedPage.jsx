@@ -20,6 +20,7 @@ import {
     BiPencil,
     BiTrash,
 } from "react-icons/bi";
+import { BsX } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import FeedSidebar from "./FeedSidebar";
 import LeftSidebar from "./LeftSidebar";
@@ -46,7 +47,7 @@ function timeSince(date) {
     }
     interval = seconds / 60;
     if (interval > 1) {
-        return Math.floor(interval) + "mins";
+        return Math.floor(interval) + "m";
     }
     return Math.floor(seconds) + " s";
 }
@@ -92,6 +93,13 @@ export default function FeedPage() {
     const [posts, setPosts] = useState([]);
     const [post, setPost] = useState("");
     const [deletingPost, setDeletingPost] = useState("");
+
+    const [show, setShow] = useState(false);
+    const [updatePost, setUpdatePost] = useState({});
+    const [editingPost, setEditingPost] = useState("");
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const localUser = useSelector((state) => state.activeUser);
 
@@ -238,6 +246,55 @@ export default function FeedPage() {
         }
     };
 
+    const onChangeHandler = (e) => {
+        setUpdatePost({
+            text: e.target.value,
+        });
+    };
+
+    const handleSave = async (e) => {
+        handleClose();
+        setIsUploading(true);
+
+        const { status, data } = await doFetch(
+            `https://striveschool-api.herokuapp.com/api/posts/${editingPost}`,
+            {
+                headers: {
+                    ...opts.headers,
+                    "Content-Type": "application/json",
+                },
+                method: "put",
+                body: JSON.stringify({
+                    text: updatePost.text,
+                }),
+            },
+            true
+        );
+
+        setIsUploading(false);
+
+        if (status === "ok") {
+            // let post = posts.find((post) => post._id === editingPost);
+
+            // post = data;
+
+            setPosts(
+                posts.map((post) => {
+                    if (post._id === editingPost) {
+                        return {
+                            ...data,
+                            user: post.user,
+                        };
+                    } else {
+                        return post;
+                    }
+                })
+            );
+        } else {
+            console.error(data);
+        }
+    };
+
     useEffect(() => {
         fetchPosts();
     }, []);
@@ -250,6 +307,38 @@ export default function FeedPage() {
 
     return (
         <Container>
+            <Modal show={show} onHide={handleClose} size="lg">
+                <Modal.Header>
+                    Edit Post
+                    <BsX
+                        onClick={handleClose}
+                        className="modal-close"
+                        size={30}
+                    />
+                </Modal.Header>
+                <Modal.Body>
+                    <p className="tip">* Indicates required</p>
+                    <Form className="mt-4">
+                        <Form.Group className="mb-3" controlId="name">
+                            <Form.Label>Text*</Form.Label>
+                            <Form.Text type="text" />
+                            <textarea
+                                className="form-control"
+                                onChange={onChangeHandler}
+                            >
+                                {updatePost.text}
+                            </textarea>
+                        </Form.Group>
+                        <Button
+                            variant="primary"
+                            className="float-right pilled"
+                            onClick={handleSave}
+                        >
+                            Save
+                        </Button>
+                    </Form>
+                </Modal.Body>
+            </Modal>
             <Row>
                 <Col md={3}>
                     <LeftSidebar />
@@ -346,7 +435,14 @@ export default function FeedPage() {
                                     }`}
                                 >
                                     {localUser._id === post.user._id ? (
-                                        <BiPencil className="editPost" />
+                                        <BiPencil
+                                            className="editPost"
+                                            onClick={(e) => {
+                                                setUpdatePost(post);
+                                                setEditingPost(post._id);
+                                                handleShow(e);
+                                            }}
+                                        />
                                     ) : (
                                         <></>
                                     )}
@@ -373,6 +469,21 @@ export default function FeedPage() {
                                             <span className="date">
                                                 {timeSince(
                                                     new Date(post.createdAt)
+                                                )}{" "}
+                                                {post.createdAt !==
+                                                    post.updatedAt && (
+                                                    <>
+                                                        <span>
+                                                            {" "}
+                                                            - edited{" "}
+                                                            {timeSince(
+                                                                new Date(
+                                                                    post.updatedAt
+                                                                )
+                                                            )}{" "}
+                                                            ago
+                                                        </span>
+                                                    </>
                                                 )}
                                             </span>
                                         </div>
