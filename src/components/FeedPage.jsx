@@ -9,7 +9,7 @@ import {
     Spinner,
 } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { opts, uri } from "../Morgan";
+import { opts } from "../Morgan";
 import "../Profile.css";
 import "../Feed.css";
 import {
@@ -51,42 +51,49 @@ function timeSince(date) {
     return Math.floor(seconds) + " s";
 }
 
+const doFetch = (url, opts, returnJson = false) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await fetch(url, opts);
+            if (response.ok) {
+                let data;
+                if (returnJson) {
+                    data = await response.json();
+                } else {
+                    data = "Valid";
+                }
+                resolve({
+                    status: "ok",
+                    data,
+                });
+            } else {
+                resolve({
+                    status: "error",
+                    data: "Status code was not 200",
+                });
+            }
+        } catch (e) {
+            resolve({
+                status: "error",
+                data: e,
+            });
+        }
+    });
+};
+
 export default function FeedPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isUploading, setIsUploading] = useState(false);
     const [error, setError] = useState("");
-    const [posts, setPosts] = useState([]);
-    const [post, setPost] = useState("");
-    const [deletingPost, setDeletingPost] = useState("");
 
     const [postType, setPostType] = useState("text");
     const [postImage, setPostImage] = useState(null);
     const [postImageUrl, setPostImageUrl] = useState("");
+    const [posts, setPosts] = useState([]);
+    const [post, setPost] = useState("");
+    const [deletingPost, setDeletingPost] = useState("");
 
     const localUser = useSelector((state) => state.activeUser);
-
-    const fetchPosts = async () => {
-        setIsLoading(true);
-        try {
-            const response = await fetch(
-                "https://striveschool-api.herokuapp.com/api/posts",
-                opts
-            );
-            if (response.ok) {
-                const data = await response.json();
-                setError("");
-                setIsLoading(false);
-                setPosts(data.reverse());
-            } else {
-                setError("Error fetching profile");
-                setIsLoading(false);
-            }
-        } catch (e) {
-            console.log(e);
-            setError("Error fetching profile");
-            setIsLoading(false);
-        }
-    };
 
     const clearForm = () => {
         setPost("");
@@ -95,123 +102,139 @@ export default function FeedPage() {
         setPostImageUrl("");
     };
 
+    const fetchPosts = async () => {
+        setIsLoading(true);
+        const { status, data } = await doFetch(
+            "https://striveschool-api.herokuapp.com/api/posts",
+            opts,
+
+            true
+        );
+
+        if (status === "ok") {
+            setError("");
+            setIsLoading(false);
+            setPosts(data.reverse());
+        } else {
+            console.error(data);
+            setError("Error fetching posts");
+            setIsLoading(false);
+        }
+    };
+
     const sendPost = async () => {
         setIsUploading(true);
-        try {
-            const response = await fetch(
-                "https://striveschool-api.herokuapp.com/api/posts",
+
+        const { status, data } = await doFetch(
+            "https://striveschool-api.herokuapp.com/api/posts",
+            {
+                headers: {
+                    ...opts.headers,
+
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    text: post,
+                }),
+            },
+            true
+        );
+
+        setIsUploading(false);
+
+        if (status === "ok") {
+            setPosts([
                 {
-                    headers: {
-                        ...opts.headers,
-
-                        "Content-Type": "application/json",
-                    },
-                    method: "POST",
-                    body: JSON.stringify({
-                        text: post,
-                    }),
-                }
-            );
-
-            if (response.ok) {
-                const data = await response.json();
-                setPosts([
-                    {
-                        ...data,
-                        user: localUser,
-                    },
-                    ...posts,
-                ]);
-                setIsUploading(false);
-            } else {
-                setIsUploading(false);
-            }
-        } catch (e) {
-            setIsUploading(false);
-            console.log(e);
+                    ...data,
+                    user: localUser,
+                },
+                ...posts,
+            ]);
+        } else {
+            console.error(data);
         }
     };
 
     const sendPostWithImage = async () => {
+        console.log("post with image");
         if (!postImage) return sendPost();
+        console.log("post with image 2");
         setIsUploading(true);
-        try {
-            const response = await fetch(
-                "https://striveschool-api.herokuapp.com/api/posts",
+
+        const { status, data } = await doFetch(
+            "https://striveschool-api.herokuapp.com/api/posts",
+            {
+                headers: {
+                    ...opts.headers,
+
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    text: post,
+                }),
+            },
+
+            true
+        );
+
+        if (status === "ok") {
+            const { _id } = data;
+
+            console.log(_id);
+
+            const formData = new FormData();
+            formData.append("post", postImage);
+
+            const { status: status2, data: data2 } = await doFetch(
+                "https://striveschool-api.herokuapp.com/api/posts/" + _id,
                 {
                     headers: {
                         ...opts.headers,
-
-                        "Content-Type": "application/json",
                     },
                     method: "POST",
-                    body: JSON.stringify({
-                        text: post,
-                    }),
-                }
+                    body: formData,
+                },
+                true
             );
 
-            if (response.ok) {
-                const { _id } = await response.json();
-
-                const formData = new FormData();
-                formData.append("post", postImage);
-
-                const imageUploadResponse = await fetch(
-                    "https://striveschool-api.herokuapp.com/api/posts/" + _id,
-                    {
-                        headers: {
-                            ...opts.headers,
-                        },
-                        method: "POST",
-                        body: formData,
-                    }
-                );
-                setIsUploading(false);
-
-                if (response.ok) {
-                    const data = await imageUploadResponse.json();
-                    setPosts([
-                        {
-                            ...data,
-                            user: localUser,
-                        },
-                        ...posts,
-                    ]);
-                }
-
-                // setPosts([
-                //     {
-                //         text: post,
-                //         user: localUser,
-                //     },
-                //     ...posts,
-                // ]);
-            } else {
-                setIsUploading(false);
-            }
-        } catch (e) {
-            console.log(e);
             setIsUploading(false);
+
+            console.log(status, data2);
+
+            if (status2 === "ok") {
+                setPosts([
+                    {
+                        ...data2,
+                        user: localUser,
+                    },
+                    ...posts,
+                ]);
+            } else {
+                console.error(data2);
+            }
+        } else {
+            setIsUploading(false);
+            console.error(data);
         }
     };
 
     const deletePost = async (id) => {
         setDeletingPost(id);
-        try {
-            const response = await fetch(
-                "https://striveschool-api.herokuapp.com/api/posts/" + id,
-                { ...opts, method: "delete" }
-            );
 
-            if (response.ok) {
-                setPosts(posts.filter((post) => post._id !== id));
-                setDeletingPost("");
-            } else {
-                setDeletingPost("");
-            }
-        } catch (e) {
-            setDeletingPost("");
+        const { status, data } = await doFetch(
+            "https://striveschool-api.herokuapp.com/api/posts/" + id,
+            { ...opts, method: "delete" },
+            false
+        );
+
+        setDeletingPost("");
+
+        if (status === "ok") {
+            setPosts(posts.filter((post) => post._id !== id));
+        } else {
+            console.error(data);
         }
     };
 
@@ -260,12 +283,12 @@ export default function FeedPage() {
                                 <Button
                                     disabled={isUploading ? true : false}
                                     onClick={(e) => {
-                                        clearForm();
                                         if (postImage) {
                                             sendPostWithImage(post);
                                         } else {
                                             sendPost(post);
                                         }
+                                        clearForm();
                                     }}
                                 >
                                     Send
