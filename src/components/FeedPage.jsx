@@ -21,6 +21,7 @@ import {
     BiTrash,
 } from "react-icons/bi";
 import { useSelector } from "react-redux";
+import LeftSidebar from "./LeftSidebar";
 
 function timeSince(date) {
     var seconds = Math.floor((new Date() - date) / 1000);
@@ -112,7 +113,7 @@ export default function FeedPage() {
         <Container>
             <Row>
                 <Col md={3}>
-                    <h4>Left sidebar</h4>
+                    <LeftSidebar/>
                 </Col>
                 <Col md={6}>
                     <div className="profile-section start-a-post">
