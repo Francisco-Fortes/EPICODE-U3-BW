@@ -11,7 +11,7 @@ import {
     BsX,
 } from "react-icons/bs";
 import { Row, Col, Modal, Button, Form, Container } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import { doFetch } from "../util";
@@ -34,6 +34,8 @@ const ProfileCenter = (props) => {
 
     const handleShow2 = () => setShow2(true);
     const handleClose2 = () => setShow2(false);
+
+    const dispatch = useDispatch();
 
     const localUser = useSelector((state) => state.activeUser);
 
@@ -97,6 +99,12 @@ const ProfileCenter = (props) => {
                 body: JSON.stringify(updateProfile),
             });
             if (response.ok) {
+                const data = await response.json();
+
+                dispatch({
+                    type: "SET_USER",
+                    payload: data,
+                });
             }
         } catch (e) {}
     };
@@ -107,7 +115,7 @@ const ProfileCenter = (props) => {
         const formData = new FormData();
         formData.append("profile", image);
 
-        await doFetch(
+        const { data, status } = await doFetch(
             `https://striveschool-api.herokuapp.com/api/profile/${localUser._id}/picture`,
             {
                 ...opts,
@@ -118,6 +126,10 @@ const ProfileCenter = (props) => {
         );
 
         fetchProfile(localUser._id);
+        dispatch({
+            type: "SET_USER",
+            payload: data,
+        });
     };
 
     useEffect(() => {
