@@ -84,7 +84,7 @@ body {
 }
 
 input.me-2.form-control {
-    transition: 2s;
+    transition: 1s;
     border-radius: 20px;
 }
 
