@@ -2,7 +2,7 @@
     background-color: #fff;
     border-radius: 15px;
     border: 1px solid #d2d2d2;
-    width: 17vw;
+    width: 100%;
 }
 
 .connflex {
@@ -10,6 +10,7 @@
     justify-content: space-between;
 }
 
-.premiumlink, .premiumlink:hover {
+.premiumlink,
+.premiumlink:hover {
     color: black;
 }

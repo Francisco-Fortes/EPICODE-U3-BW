@@ -1,7 +1,7 @@
 .addfeedflex {
     display: flex;
     flex-direction: column;
-    
+    width: 100%;
 }
 
 .companylogo {
@@ -15,7 +15,7 @@
     background-color: #fff;
     border-radius: 15px;
     border: 1px solid #d2d2d2;
-    width: 20vw;
+    width: 100%;
 }
 
 .feedsidebar p {
@@ -45,4 +45,3 @@
     padding: 5px;
     text-align: center;
 }
-
