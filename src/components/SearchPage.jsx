@@ -18,7 +18,7 @@ export default function SearchPage() {
                         <hr />
                 {searchedUser.map((user) => (
                     <>
-                    <div >
+                    
                         
                         <div className="searchflex"><img className="userpfp" src={user.image} alt="user profile picture" />
                         <div className="searchflex2"><Link to={`/in/${user._id}`}>
@@ -29,7 +29,7 @@ export default function SearchPage() {
                         <p>{user.email}</p>
                         </div>
                         </div>
-                        </div>
+                        
                     </>
                 ))}
             </Container>
