@@ -5,6 +5,7 @@
     width: 100%;
 }
 
+
 .connflex {
     display: flex;
     justify-content: space-between;
@@ -13,4 +14,12 @@
 .premiumlink,
 .premiumlink:hover {
     color: black;
+}
+
+.leftpfp {
+    border-radius: 50%;
+}
+
+.leftsidetop {
+    text-align: center;
 }

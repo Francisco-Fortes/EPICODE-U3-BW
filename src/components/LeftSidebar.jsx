@@ -6,14 +6,17 @@ export default function LeftSidebar() {
     const localUser = useSelector((state) => state.activeUser);
     return (
         <Container className="leftsidebar">
+            <div className="leftsidetop">
             <div>
                 <img src="" alt="" />
             </div>
             <div>
-                <img src="" alt="" />
+                <img className="leftpfp" src={localUser?.image} alt="" />
             </div>
             <div>
                 <h4>Welcome, {localUser?.name}!</h4>
+                </div>
+                </div>
                 <hr />
                 <div className="connflex">
                     <p>Connections</p>
@@ -29,7 +32,7 @@ export default function LeftSidebar() {
                 <p>
                     <a href="">My items</a>
                 </p>
-            </div>
+            
         </Container>
     );
 }

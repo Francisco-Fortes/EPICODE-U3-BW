@@ -83,3 +83,11 @@ body {
     border-radius: 50%;
 }
 
+input.me-2.form-control {
+    transition: 2s;
+    border-radius: 20px;
+}
+
+input.me-2.form-control:focus {
+    width: 20vw;
+}
