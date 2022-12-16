@@ -1,17 +1,8 @@
 import React from "react";
-import {
-    Row,
-    Col,
-    Container,
-    Modal,
-    Button,
-    Form,
-    Spinner,
-} from "react-bootstrap";
 import { useEffect, useState } from "react";
-import { opts } from "../Morgan";
-import "../Profile.css";
-import "../Feed.css";
+import { useSelector } from "react-redux";
+import { doFetch, timeSince } from "../util";
+
 import {
     BiLike,
     BiCommentDetail,
@@ -21,66 +12,20 @@ import {
     BiTrash,
 } from "react-icons/bi";
 import { BsX } from "react-icons/bs";
-import { useSelector } from "react-redux";
+import {
+    Row,
+    Col,
+    Container,
+    Modal,
+    Button,
+    Form,
+    Spinner,
+} from "react-bootstrap";
+import { opts } from "../Morgan";
+import "../Profile.css";
+import "../Feed.css";
 import FeedSidebar from "./FeedSidebar";
 import LeftSidebar from "./LeftSidebar";
-
-function timeSince(date) {
-    var seconds = Math.floor((new Date() - date) / 1000);
-
-    var interval = seconds / 31536000;
-
-    if (interval > 1) {
-        return Math.floor(interval) + "y";
-    }
-    interval = seconds / 2592000;
-    if (interval > 1) {
-        return Math.floor(interval) + "m";
-    }
-    interval = seconds / 86400;
-    if (interval > 1) {
-        return Math.floor(interval) + "d";
-    }
-    interval = seconds / 3600;
-    if (interval > 1) {
-        return Math.floor(interval) + "h";
-    }
-    interval = seconds / 60;
-    if (interval > 1) {
-        return Math.floor(interval) + "m";
-    }
-    return Math.floor(seconds) + " s";
-}
-
-const doFetch = (url, opts, returnJson = false) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const response = await fetch(url, opts);
-            if (response.ok) {
-                let data;
-                if (returnJson) {
-                    data = await response.json();
-                } else {
-                    data = "Valid";
-                }
-                resolve({
-                    status: "ok",
-                    data,
-                });
-            } else {
-                resolve({
-                    status: "error",
-                    data: "Status code was not 200",
-                });
-            }
-        } catch (e) {
-            resolve({
-                status: "error",
-                data: e,
-            });
-        }
-    });
-};
 
 export default function FeedPage() {
     const [isLoading, setIsLoading] = useState(true);

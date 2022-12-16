@@ -1,4 +1,4 @@
-const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mzk5YmUwZDU0ZjRhYTAwMTUxOTMwMzkiLCJpYXQiOjE2NzEwMjAwNDUsImV4cCI6MTY3MjIyOTY0NX0.3XuEFOEGaNXNTq32t5nPT9qEUWuQJirhYW-2WA-luyQ`;
+const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mzk5OGQ4MTU0ZjRhYTAwMTUxOTMwMjgiLCJpYXQiOjE2NzEwMDc2MTcsImV4cCI6MTY3MjIxNzIxN30.cSe4CwoajKqBlSxhZ9jxQtYaay9FYkPy74H9lnKOxXI`;
 export const opts = {
     headers: {
         Authorization: `Bearer ${token}`,
