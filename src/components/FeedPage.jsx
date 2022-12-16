@@ -53,9 +53,16 @@ function timeSince(date) {
 
 export default function FeedPage() {
     const [isLoading, setIsLoading] = useState(true);
+    const [isUploading, setIsUploading] = useState(false);
     const [error, setError] = useState("");
     const [posts, setPosts] = useState([]);
     const [post, setPost] = useState("");
+    const [deletingPost, setDeletingPost] = useState("");
+
+    const [postType, setPostType] = useState("text");
+    const [postImage, setPostImage] = useState(null);
+    const [postImageUrl, setPostImageUrl] = useState("");
+
     const localUser = useSelector((state) => state.activeUser);
 
     const fetchPosts = async () => {
@@ -81,7 +88,15 @@ export default function FeedPage() {
         }
     };
 
-    const sendPost = async (text) => {
+    const clearForm = () => {
+        setPost("");
+        setPostType("text");
+        setPostImage(null);
+        setPostImageUrl("");
+    };
+
+    const sendPost = async () => {
+        setIsUploading(true);
         try {
             const response = await fetch(
                 "https://striveschool-api.herokuapp.com/api/posts",
@@ -99,10 +114,104 @@ export default function FeedPage() {
             );
 
             if (response.ok) {
-                fetchPosts();
+                const data = await response.json();
+                setPosts([
+                    {
+                        ...data,
+                        user: localUser,
+                    },
+                    ...posts,
+                ]);
+                setIsUploading(false);
+            } else {
+                setIsUploading(false);
+            }
+        } catch (e) {
+            setIsUploading(false);
+            console.log(e);
+        }
+    };
+
+    const sendPostWithImage = async () => {
+        if (!postImage) return sendPost();
+        setIsUploading(true);
+        try {
+            const response = await fetch(
+                "https://striveschool-api.herokuapp.com/api/posts",
+                {
+                    headers: {
+                        ...opts.headers,
+
+                        "Content-Type": "application/json",
+                    },
+                    method: "POST",
+                    body: JSON.stringify({
+                        text: post,
+                    }),
+                }
+            );
+
+            if (response.ok) {
+                const { _id } = await response.json();
+
+                const formData = new FormData();
+                formData.append("post", postImage);
+
+                const imageUploadResponse = await fetch(
+                    "https://striveschool-api.herokuapp.com/api/posts/" + _id,
+                    {
+                        headers: {
+                            ...opts.headers,
+                        },
+                        method: "POST",
+                        body: formData,
+                    }
+                );
+                setIsUploading(false);
+
+                if (response.ok) {
+                    const data = await imageUploadResponse.json();
+                    setPosts([
+                        {
+                            ...data,
+                            user: localUser,
+                        },
+                        ...posts,
+                    ]);
+                }
+
+                // setPosts([
+                //     {
+                //         text: post,
+                //         user: localUser,
+                //     },
+                //     ...posts,
+                // ]);
+            } else {
+                setIsUploading(false);
             }
         } catch (e) {
             console.log(e);
+            setIsUploading(false);
+        }
+    };
+
+    const deletePost = async (id) => {
+        setDeletingPost(id);
+        try {
+            const response = await fetch(
+                "https://striveschool-api.herokuapp.com/api/posts/" + id,
+                { ...opts, method: "delete" }
+            );
+
+            if (response.ok) {
+                setPosts(posts.filter((post) => post._id !== id));
+                setDeletingPost("");
+            } else {
+                setDeletingPost("");
+            }
+        } catch (e) {
+            setDeletingPost("");
         }
     };
 
@@ -110,32 +219,95 @@ export default function FeedPage() {
         fetchPosts();
     }, []);
 
+    useEffect(() => {
+        if (!postImage) return;
+
+        setPostImageUrl(URL.createObjectURL(postImage));
+    }, [postImage]);
+
     return (
         <Container>
             <Row>
                 <Col md={3}>
-                    <LeftSidebar/>
+                    <LeftSidebar />
                 </Col>
                 <Col md={6}>
                     <div className="profile-section start-a-post">
-                        <img src={localUser?.image} />
-                        <input
-                            type="text"
-                            placeholder="Start a post"
-                            value={post}
+                        <select
+                            className="form-control"
                             onChange={(e) => {
-                                setPost(e.target.value);
+                                setPostType(e.target.value);
                             }}
-                        />
-                        {post && (
-                            <Button
-                                onClick={(e) => {
-                                    sendPost(post);
-                                    setPost("");
+                            disabled={isUploading ? true : false}
+                            value={postType}
+                        >
+                            <option value="text">Text post</option>
+                            <option value="image">Image post</option>
+                        </select>
+                        <br />
+                        <div>
+                            <img src={localUser?.image} />
+                            <input
+                                disabled={isUploading ? true : false}
+                                type="text"
+                                placeholder="Start a post"
+                                value={post}
+                                onChange={(e) => {
+                                    setPost(e.target.value);
                                 }}
-                            >
-                                Send
-                            </Button>
+                            />
+                            {post && (
+                                <Button
+                                    disabled={isUploading ? true : false}
+                                    onClick={(e) => {
+                                        clearForm();
+                                        if (postImage) {
+                                            sendPostWithImage(post);
+                                        } else {
+                                            sendPost(post);
+                                        }
+                                    }}
+                                >
+                                    Send
+                                </Button>
+                            )}
+                        </div>
+
+                        {postType === "image" && (
+                            <>
+                                <hr />
+                                <input
+                                    disabled={isUploading ? true : false}
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        setPostImage(e.target.files[0]);
+                                    }}
+                                />
+                            </>
+                        )}
+                        {postImage && (
+                            <>
+                                <hr />
+                                <img src={postImageUrl} className="upload" />
+                                <br /> <br />
+                                <Button
+                                    className="uploadbtn"
+                                    variant="danger"
+                                    onClick={(e) => {
+                                        setPostImage(null);
+                                        setPostImageUrl("");
+                                    }}
+                                >
+                                    Remove image
+                                </Button>
+                            </>
+                        )}
+                        {isUploading && (
+                            <>
+                                <hr />
+                                <Spinner />
+                            </>
                         )}
                     </div>
                     {isLoading && <Spinner />}
@@ -143,14 +315,26 @@ export default function FeedPage() {
                         !error &&
                         posts.slice(0, 25).map((post) => (
                             <>
-                                <div className="profile-section post activity">
+                                <div
+                                    className={`profile-section post activity ${
+                                        deletingPost === post._id
+                                            ? " deleting"
+                                            : ""
+                                    }`}
+                                >
                                     {localUser._id === post.user._id ? (
                                         <BiPencil className="editPost" />
                                     ) : (
                                         <></>
                                     )}
-                                    {localUser._id === post.user._id ? (
-                                        <BiTrash className="deletePost" />
+                                    {localUser._id === post.user._id &&
+                                    deletingPost !== post._id ? (
+                                        <BiTrash
+                                            className="deletePost"
+                                            onClick={async (e) => {
+                                                deletePost(post._id);
+                                            }}
+                                        />
                                     ) : (
                                         <></>
                                     )}
@@ -171,6 +355,14 @@ export default function FeedPage() {
                                         </div>
                                     </div>
                                     <div className="post-text">{post.text}</div>
+                                    {post.image ? (
+                                        <div className="post-image">
+                                            <hr />
+                                            <img src={post.image} />
+                                        </div>
+                                    ) : (
+                                        <></>
+                                    )}
                                 </div>
                                 <div className="post-buttons">
                                     <div>
@@ -194,7 +386,7 @@ export default function FeedPage() {
                         ))}
                 </Col>
                 <Col md={3}>
-                    <FeedSidebar/>
+                    <FeedSidebar />
                 </Col>
             </Row>
         </Container>
